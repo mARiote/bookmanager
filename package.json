@@ -1,17 +1,19 @@
 {
-	"name": "bookmanager"
-	, "repository" : {
-		"type" : "git"
-		, "url" : "https://github.com/mARiote/bookmanager.git"
-	}
-	, "scripts": {
-		"start": "node server.js"
-		, "test": "mocha --reporter spec test/test-*.js"
-	}
-	, "dependencies": {
+	"name": "bookmanager",
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/mARiote/bookmanager.git"
+	},
+	"scripts": {
+		"start": "node server.js",
+		"test": "mocha --reporter spec test/test-*.js"
+	},
+	"dependencies": {
 		"express": "latest"
-	}
-	, "devDependencies": {
-		"mocha": "latest"
+	},
+	"devDependencies": {
+		"mocha": "latest",
+		"supertest": "latest",
+		"should": "latest"
 	}
 }
