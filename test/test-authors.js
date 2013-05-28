@@ -4,10 +4,11 @@
 var app = require('../server');
 var should = require('should');
 var request = require('supertest');
+var assert = require('assert');
 
 /*
 
-var mongoose = require('mongoose')
+var mongoose = require('mongoose')e
   , context = describe
   , User = mongoose.model('User')
   , Article = mongoose.model('Article')
@@ -33,158 +34,32 @@ describe('Authors', function () {
 		})
 */
 	describe('GET /authors', function () {
-/*
 		it('should respond with Content-Type text/json', function (done) {
 			request(app)
 			.get('/authors')
-			.expect('Content-Type', /html/)
+			.expect('Content-Type', /json/)
 			.expect(200)
-			.expect(/List of authors/)
 			.end(done);
-		});
-*/
+		})
+		
+		it('should respond with Authors List', function(done) {
+			request(app)
+			.get('/authors')
+			.end(function(err, res) {
+				assert.equal(err, null);
+				var body = res.body;
+				assert.equal(body.success, 'true');
+				assert.equal(body.data.length, body.total);
+				assert.ok(body.total == 3);
+				assert.equal(body.data[0].name, 'Author 1');
+				assert.equal(body.data[1].name, 'Author 2');
+				assert.equal(body.data[2].name, 'Author 3');
+				done();
+			});
+		})
 	});
-/*
-  describe('GET /authors/new', function () {
-    context('When not logged in', function () {
-      it('should redirect to /login', function (done) {
-        request(app)
-        .get('/authors/new')
-        .expect('Content-Type', /plain/)
-        .expect(302)
-        .expect('Location', '/login')
-        .expect(/Moved Temporarily/)
-        .end(done)
-      })
-    })
 
-    context('When logged in', function () {
-      before(function (done) {
-        // login the user
-        request(app)
-        .post('/users/session')
-        .field('email', 'foobar@example.com')
-        .field('password', 'foobar')
-        .end(function (err, res) {
-          // store the cookie
-          cookies = res.headers['set-cookie'].pop().split(';')[0];
-          done()
-        })
-      })
-
-      it('should respond with Content-Type text/html', function (done) {
-        var req = request(app).get('/authors/new')
-        req.cookies = cookies
-        req
-        .expect('Content-Type', /html/)
-        .expect(200)
-        .expect(/New Article/)
-        .end(done)
-      })
-    })
-  })
-
-  describe('POST /authors', function () {
-    context('When not logged in', function () {
-      it('should redirect to /login', function (done) {
-        request(app)
-        .get('/authors/new')
-        .expect('Content-Type', /plain/)
-        .expect(302)
-        .expect('Location', '/login')
-        .expect(/Moved Temporarily/)
-        .end(done)
-      })
-    })
-
-    context('When logged in', function () {
-      before(function (done) {
-        // login the user
-        request(app)
-        .post('/users/session')
-        .field('email', 'foobar@example.com')
-        .field('password', 'foobar')
-        .end(function (err, res) {
-          // store the cookie
-          cookies = res.headers['set-cookie'].pop().split(';')[0];
-          done()
-        })
-      })
-
-      describe('Invalid parameters', function () {
-        before(function (done) {
-          Article.count(function (err, cnt) {
-            count = cnt
-            done()
-          })
-        })
-
-        it('should respond with error', function (done) {
-          var req = request(app).post('/authors')
-          req.cookies = cookies
-          req
-          .field('title', '')
-          .field('body', 'foo')
-          .expect('Content-Type', /html/)
-          .expect(200)
-          .expect(/Article title cannot be blank/)
-          .end(done)
-        })
-
-        it('should not save to the database', function (done) {
-          Article.count(function (err, cnt) {
-            count.should.equal(cnt)
-            done()
-          })
-        })
-      })
-
-      describe('Valid parameters', function () {
-        before(function (done) {
-          Article.count(function (err, cnt) {
-            count = cnt
-            done()
-          })
-        })
-
-        it('should redirect to the new article page', function (done) {
-          var req = request(app).post('/authors')
-          req.cookies = cookies
-          req
-          .field('title', 'foo')
-          .field('body', 'bar')
-          .expect('Content-Type', /plain/)
-          .expect('Location', /\/authors\//)
-          .expect(302)
-          .expect(/Moved Temporarily/)
-          .end(done)
-        })
-
-        it('should insert a record to the database', function (done) {
-          Article.count(function (err, cnt) {
-            cnt.should.equal(count + 1)
-            done()
-          })
-        })
-
-        it('should save the article to the database', function (done) {
-          Article
-          .findOne({ title: 'foo'})
-          .populate('user')
-          .exec(function (err, article) {
-            should.not.exist(err)
-            article.should.be.an.instanceOf(Article)
-            article.title.should.equal('foo')
-            article.body.should.equal('bar')
-            article.user.email.should.equal('foobar@example.com')
-            article.user.name.should.equal('Foo bar')
-            done()
-          })
-        })
-      })
-    })
-  })
-
+	/*
   after(function (done) {
     require('./helper').clearDb(done)
   })

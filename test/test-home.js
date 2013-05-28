@@ -9,14 +9,14 @@ var request = require('supertest');
  * Routes tests
  */
 
-describe('Routes', function () {
+describe('Home', function () {
 	describe('GET /', function () {
 		it('should respond with Content-Type text/html', function (done) {
 			request(app)
 			.get('/')
 			.expect('Content-Type', /html/)
 			.expect(200)
-			.expect(/Hola Mundo/)
+			.expect(/Book Manager/)
 			.end(done);
 		});
 	});
